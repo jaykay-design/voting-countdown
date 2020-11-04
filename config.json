@@ -1,0 +1,24 @@
+﻿[
+  {
+    "Seconds": 180,
+    "Name":  "Roll Call",
+    "During": "The Roll Call will end in",
+    "After": "The Roll Call has ended",
+    "Default": false
+  },
+  {
+    "Seconds": 120,
+    "Name": "Voting",
+    "During": "The vote will end in",
+    "After": "The vote has ended",
+    "Default": true
+  },
+  {
+    "Seconds": 600,
+    "Name": "Break",
+    "During": "The break will be over in",
+    "After": "The break is over",
+    "Default": false
+  }
+
+]

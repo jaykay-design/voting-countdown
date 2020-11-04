@@ -1,21 +1,31 @@
-﻿using System.Threading;
-using System.Windows;
-using System.Windows.Input;
-
-namespace CountdownTimer
+﻿namespace CountdownTimer
 {
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Text.Json;
+    using System.Threading;
+    using System.Windows;
+    using System.Windows.Input;
+
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
         Timer timer = null;
-        const int timeoutSeconds = 120;
+
         int secondsDue;
+
+        public List<Stage> Stages { get; set; }
+        public Stage CurrentStage { get; set; }
 
         public MainWindow()
         {
             InitializeComponent();
+
+            this.Stages = JsonSerializer.Deserialize<List<Stage>>(File.ReadAllText("config.json"));
+            CurrentStage = this.Stages.First(s => s.Default);
 
             this.KeyDown += MainWindow_KeyDown;
             titleLabel.Content = "";
@@ -31,7 +41,7 @@ namespace CountdownTimer
                 timer = null;
                 titleLabel.Dispatcher.Invoke(() =>
                 {
-                    titleLabel.Content = "The vote has ended";
+                    titleLabel.Content = this.CurrentStage.After;
                 });
             }
 
@@ -61,6 +71,11 @@ namespace CountdownTimer
                     WindowStyle = WindowStyle.None;
                 }
             }
+            else if (e.Key == Key.Insert)
+            {
+                var setup = new Setup(this);
+                setup.ShowDialog();
+            }
         }
 
         private void StartTimer()
@@ -70,11 +85,11 @@ namespace CountdownTimer
                 return;
             }
 
-            titleLabel.Content = "The vote will end in";
+            titleLabel.Content = this.CurrentStage.During;
             timer = new Timer(timerStep, null, 1000, 1000);
         }
 
-        private void ResetTimer()
+        public void ResetTimer()
         {
             if (timer != null)
             {
@@ -83,7 +98,7 @@ namespace CountdownTimer
             }
 
             titleLabel.Content = "";
-            secondsDue = timeoutSeconds;
+            secondsDue = this.CurrentStage.Seconds;
             WriteTime();
         }
 
