@@ -2,7 +2,7 @@
 
 Enter setup screen with 'Insert'
 
-Reset the timer with 'Esc'
+Reset the timer with 'Delete'
 
 Start the timer with 'Enter'
 
